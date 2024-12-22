@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App - Home</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+
+<main>
+    {% block content %}
+    <div id="welcome">
+    <h1 id="intro">Welcome To The Quiz App</h1>
+    <p id="welcomep">Your one-stop destination for fun, engaging quizzes!    </p>
+
+    <a href="{% url 'show_quiz' %}" id="seequiz">Available Quizzes</a>
+</div>
+<div style="display: flex">
+    <div style="padding: 20px 10px;">
+        <img src="{% static 'images/quiz1.jpeg' %}" style="min-width: 140px; min-height: 100px; 
+        max-width: 300px; max-height: 250px;">
+        
+    </div>
+    <div >
+    <h3 id="teach">Are you a Teacher?</h3>
+    <a href="{% url 'createquiz' %}" id="teacherlink">Create Quiz</a>
+    
+</div>
+    <div style="padding: 20px 20px;">
+        <img src="{% static 'images/images.jpeg' %}" style="min-width: 140px; min-height: 100px; 
+        max-width: 300px; max-height: 250px;">
+    </div>
+</div>
+
+    
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Register</h1>
+    <div>
+    <form method="post">
+        <div id="register">
+        {% csrf_token %}
+        {{form}}
+        <button type="submit">Create</button></div>
+    </form>
+    <p>Already Have a account ? <a href="{% url 'custom_login' %}">Click Here</a>    </p></div>
+</body>
+</html>

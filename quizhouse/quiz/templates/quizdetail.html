@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<div>
+    <div>
+        <b><label>Quiz Name : </label> </b> {{currentquiz.quiz}}<br>
+        <b> <label>Time Limit : </label> </b> {{currentquiz.maxtime}}<br>
+        <b><label>Number Of Questions : </label> </b> {{currentquiz.numquestions}}<br>
+        <h4>Questions</h4>
+        <ol>
+            {% for que in questions %}
+            <h4><li>{{que.question}}</li></h4>
+            <ul>
+            {% for opt in que.options_set.all %}
+                <li>{{ opt.option }}</li>
+        {% endfor %}</ul>
+            <p style="margin-left: 10px;"> <b>Answer</b> : {{que.answer}}</p>
+            {% endfor %}
+        </ol>
+    </div>
+</div>
+{% endblock %}

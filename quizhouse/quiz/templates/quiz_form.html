@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz Form</title>
+</head>
+<body  style="background-color: hsl(0, 0%, 94%);">
+    
+
+<form method="post" id="question">
+    {% extends 'base.html' %}
+    {% load static %}
+    
+    
+    
+    
+    {% block content %}
+    {% csrf_token %}
+    <label>Question : </label>{{queform.question}}
+    <input type="hidden" name="question_name">
+    <br>
+
+    
+
+    
+
+    <p>Enter The Options and select the right option</p>
+    <div id="options-container">
+        <div class="option-form" class="option-form" id="option-form"></div>
+        {{ formset.management_form }}
+        {% for form in formset %}
+                <div class="option">
+                    <input type="radio" name="mcq"  class ="radio">
+                    option : {{form.option}}</div>
+                
+        {% endfor %}</div>
+    </div>
+    <label>Selected Answer </label>
+    <div  id="ans" >
+        
+        {{queform.answer}}</div>
+    <button type="submit" onclick="isvalid()">Submit</button>
+    {% endblock %}
+
+</form>
+
+</body>

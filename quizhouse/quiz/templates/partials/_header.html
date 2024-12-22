@@ -1,0 +1,11 @@
+<nav  >
+  <ul style="display: flex; list-style: none; padding: 10px; margin-left: 10px;  margin-right: 10px; margin-top: 0;">
+    <li style="margin-right: 20px;"><a href="{% url 'home' %}">Home</a></li>
+    <li><a href="{% url 'show_quiz' %}">Available Quizzes</a></li>
+    {% if user.is_authenticated %}
+    <li style="margin-left: auto;"><a href="{% url 'custom_logout' %}">LogOut</a></li>
+    {% else %}
+    <li style="margin-left: auto;"><a href="{% url 'register' %}">LogIn/SignUp</a></li>
+    {% endif %}
+  </ul>
+</nav>
