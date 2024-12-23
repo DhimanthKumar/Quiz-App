@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>
+<div  style="background-color: greenyellow; display: inline-block;">Score <div id="marks" style="display: inline-block;" > </div></div><br>
+</h2>
+<p>Your Answer represented by <b style="background-color: red;"> red </b>if wrong . Right answer shown as <b style="background-color: limegreen;"> green</b></p>
+<label>Quiz Name: </label>   {{quiz.quiz}}<br>
+<label>Max Time : </label>{{quiz.maxtime}}<br>
+{% for question in questions %}
+    <ol>
+        <div id="{{question.question}}">
+        <li>{{question.question}}</li> </div>
+        <ul>
+            {% for options in question.options_set.all %}
+            {% if options.option == question.answer %}
+            <div id="{{question.question}}-{{options.option}}" style="background-color: limegreen; display: inline-block;">
+            <li>{{options.option}}</li></div><br>
+            {% else %}
+            <div id="{{question.question}}-{{options.option}}" >
+                <li>{{options.option}}</li></div>
+            {% endif %}
+            {% endfor %}
+        </ul>
+     
+    </ol>
+{% endfor %}
+{% for userq in userquiz %}
+<div id="{{userq.choice.question.question}}-{{userq.choice.option}}" class="scores" style="display: none;">{{userq.choice.option}}</div>
+{% endfor %}
+<script>
+    window.onload = function(){
+        const scores= document.querySelectorAll('.scores');
+        let mark =0;
+        const total= scores.length;
+        const marks = document.getElementById('marks');
+        console.log(marks)
+        scores.forEach((score)=>{
+            const choice = document.getElementById(score.id);
+            if (choice.style.backgroundColor=="limegreen"){
+                mark+=1
+                //do nothing
+            }
+            else{
+                choice.style.backgroundColor="red";
+                choice.style.display="inline-block";
+            }
+            console.log(choice);
+        })
+        marks.textContent= `${(mark/total)*100}% `
+    }
+</script>
+{% endblock %}

@@ -50,7 +50,7 @@ setInterval(() => {
     const elapsed = end - start; // Difference in milliseconds
     const curtimer= timeout-(end-start);
     if (curtimer<0){
-        const form = document.getElementById('#quiz');
+        const form = document.getElementById('quiz');
         form.submit();
         console.log('over')}
     // console.log(`Elapsed time: ${Math.floor(curtimer/(1000*60))} : ${Math.floor((curtimer % (1000 * 60)) / 1000)}`);

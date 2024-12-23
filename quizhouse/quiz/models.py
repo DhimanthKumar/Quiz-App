@@ -19,9 +19,6 @@ class options(models.Model):
         return f"Option: {self.option} (Question: {self.question.question})"
 class userquizdata(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
+    quiz = models.ForeignKey(Quiz,on_delete=models.CASCADE )
     # choice=models.ForeignKey(options,on_delete=models.CASCADE , related_name="choices")
     choice = models.ForeignKey(options,on_delete=models.CASCADE)
-class quiztime(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE,)
-    quiz = models.ForeignKey(Quiz,on_delete=models.CASCADE ,)
-    time=models.DateTimeField()

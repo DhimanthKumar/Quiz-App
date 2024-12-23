@@ -1,5 +1,5 @@
-from django.shortcuts import render,redirect,get_object_or_404
-from .models import Quiz,questions,userquizdata,quiztime
+from django.shortcuts import render,redirect,get_object_or_404,HttpResponse
+from .models import Quiz,questions,userquizdata
 from .forms import basicquizdetails,CustomUserCreationForm,OptionFormSet,options,QuestionForm,userquizform
 # Create your views here.
 from django.contrib.auth import authenticate, login,logout
@@ -136,42 +136,40 @@ def quizdetails(request, quizobject):
 def takequiz(request , quizobject):
     currentquiz = get_object_or_404(Quiz, id=quizobject)
     matchingquestions = questions.objects.filter(quiz=currentquiz).prefetch_related('options_set').all()
-    usersquizes=quiztime.objects.filter(user=request.user).filter(quiz=currentquiz)
+    usersquizes=userquizdata.objects.filter(user=request.user).filter(quiz=currentquiz)
     if len(usersquizes)==0:
-        data = quiztime(user=request.user, quiz=currentquiz ,time=datetime.now())
-        timeelapsed=0
-        data.save()
-    else:
-        data=quiztime.objects.get(user=request.user , quiz=currentquiz)
-        timezone = pytz.timezone('UTC')
-        
-        datatime=data.time
-        timeelapsed=timezone.localize(datetime.now())-datatime
-        # print(timeelapsed.total_seconds())#gives tot seconds
-        if ((timeelapsed.total_seconds()/60) > currentquiz.maxtime):  
-            print('time over nub')
-            # return render(request,'home.html')
-    userquizformset = modelformset_factory(
+        userquizformset = modelformset_factory(
         userquizdata,
         form=userquizform,
         extra=len(matchingquestions)
-    )
-    if request.method=="POST":
-        formset = userquizformset(request.POST)
-        if formset.is_valid():
-            # print(formset)
-            for form in formset:
-                print('\n', form.instance.choice)
-                form.instance.user=request.user
-            formset.save()
+        )
+        if request.method=="POST":
+            formset = userquizformset(request.POST)
+            if formset.is_valid():
+                # print(formset)
+                for form in formset:
+                    print('\n', form.instance.choice)
+                    form.instance.user=request.user
+                    form.instance.quiz=currentquiz
+                formset.save()
+                return redirect('score',quizobject=quizobject)
+            else:
+                print(formset.errors)
+            pass
         else:
-            print(formset.errors)
-        pass
+            formset=userquizformset(queryset=userquizdata.objects.none() )
     else:
-        formset=userquizformset(queryset=userquizdata.objects.none() )
+        return redirect('score',quizobject=quizobject)
+            # return render(request,'home.html')
+    
     
     
     return render(request,'takequiz.html',{"quiz":currentquiz , "questions" : matchingquestions,
                                            "formset" : formset ,
                                            })
-    
+@login_required
+def score(request,quizobject):
+    currentquiz = get_object_or_404(Quiz, id=quizobject)
+    matchingquestions = questions.objects.filter(quiz=currentquiz).prefetch_related('options_set').all()
+    usersquizes=userquizdata.objects.filter(user=request.user).filter(quiz=currentquiz)
+    return render(request,'score.html',{"quiz":currentquiz , "questions":matchingquestions,"userquiz":usersquizes});   

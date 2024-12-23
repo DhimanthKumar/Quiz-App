@@ -5,7 +5,12 @@
     {% if user.is_authenticated %}
     <li style="margin-left: auto;"><a href="{% url 'custom_logout' %}">LogOut</a></li>
     {% else %}
-    <li style="margin-left: auto;"><a href="{% url 'register' %}">LogIn/SignUp</a></li>
+    <div style="margin-left: auto; display: flex;">
+      <li ><a href="{% url 'custom_login' %}">LogIn</a></li>
+    <li ><a href="{% url 'register' %}">SignUp</a></li>
+
+    </div>
+    
     {% endif %}
   </ul>
 </nav>

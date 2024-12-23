@@ -20,19 +20,21 @@
 
     <a href="{% url 'show_quiz' %}" id="seequiz">Available Quizzes</a>
 </div>
-<div style="display: flex">
-    <div style="padding: 20px 10px;">
-        <img src="{% static 'images/quiz1.jpeg' %}" style="min-width: 140px; min-height: 100px; 
+<div style="display: flex " >
+    <div style="padding: 20px 10px; margin-left: auto;">
+        <img src="{% static 'images/quiz1.jpeg' %}" style="min-width: 50px; min-height: 100px; 
+        width: 100%;height: 100%;
         max-width: 300px; max-height: 250px;">
         
     </div>
-    <div >
+    <div  style="margin: auto;">
     <h3 id="teach">Are you a Teacher?</h3>
-    <a href="{% url 'createquiz' %}" id="teacherlink">Create Quiz</a>
+    <a href="{% url 'createquiz' %}" id="teacherlink"  ">Create Quiz</a>
     
 </div>
-    <div style="padding: 20px 20px;">
-        <img src="{% static 'images/images.jpeg' %}" style="min-width: 140px; min-height: 100px; 
+    <div style="padding: 20px 20px; margin-right: auto;">
+        <img src="{% static 'images/images.jpeg' %}" style="min-width: 50px; min-height: 100px; 
+        width: 100%;height: 100%;
         max-width: 300px; max-height: 250px;">
     </div>
 </div>
