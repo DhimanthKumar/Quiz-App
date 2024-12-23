@@ -1,21 +1,51 @@
 {% extends 'base.html' %}
 {% block content %}
 <div>
-    <div>
-        <b><label>Quiz Name : </label> </b> {{currentquiz.quiz}}<br>
-        <b> <label>Time Limit : </label> </b> {{currentquiz.maxtime}}<br>
-        <b><label>Number Of Questions : </label> </b> {{currentquiz.numquestions}}<br>
-        <h4>Questions</h4>
-        <ol>
-            {% for que in questions %}
-            <h4><li>{{que.question}}</li></h4>
+    <b><label>Quiz Name:</label></b> {{ currentquiz.quiz }}<br>
+    <b><label>Time Limit:</label></b> {{ currentquiz.maxtime }} minutes<br>
+    <b><label>Number of Questions:</label></b> {{ currentquiz.numquestions }}<br>
+
+    <h4>Questions</h4>
+    <ol>
+        {% for que in questions %}
+    <div id="question-{{forloop.counter}}">
+        <li>
+            
+            <h4 >{{ que.question }}</h4>
             <ul>
-            {% for opt in que.options_set.all %}
-                <li>{{ opt.option }}</li>
-        {% endfor %}</ul>
-            <p style="margin-left: 10px;"> <b>Answer</b> : {{que.answer}}</p>
-            {% endfor %}
-        </ol>
+                {% for opt in que.options_set.all %}
+                <div class="options" style="display: inline-block;"> 
+                <li>{{ opt.option }}</li></div><br>
+                {% endfor %}
+            </ul>
+            
+                <b>Answer:</b> <div class="answers" style="display: inline;">{{ que.answer }}
+            </div>
+        </li>
     </div>
+        {% endfor %}
+    </ol>
 </div>
+<script>
+    window.onload = function(){
+    const questions=document.querySelectorAll('[id^="question-"]');
+    // console.log(questions)
+    questions.forEach((question)=> {
+        const options = question.querySelectorAll('.options');
+        const answer = question.querySelectorAll('.answers')[0];
+        options.forEach((option)=>{
+            // console.log(option);
+            console.log(answer.textContent);
+            console.log(option.textContent);
+            console.log('\n\n')
+            if(option.textContent.trim() == answer.textContent.trim()){
+            option.style.backgroundColor='yellow';
+            // option.style.display='inline';
+        }
+        })
+    } )
+    
+    }
+</script>
+
 {% endblock %}

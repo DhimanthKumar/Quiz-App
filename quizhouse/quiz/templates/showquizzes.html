@@ -16,7 +16,7 @@
             {% if user.is_staff %}
             <a href="{% url 'quizdetails' quizobject=item.id   %}" class="details">Quiz Overview</a>
             {% else %}
-            <a href="{% url 'home'   %}" class="details">Take Quiz(In Development)</a>
+            <a href="{% url 'takequiz' quizobject=item.id   %}" class="details">Take Quiz(In Development)</a>
             {% endif %}
             <p>id : {{item.id}}</p>
         </div>

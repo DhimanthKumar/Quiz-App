@@ -1,12 +1,15 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from .models import Quiz,questions
-from .forms import basicquizdetails,CustomUserCreationForm,OptionFormSet,options,QuestionForm
+from .models import Quiz,questions,userquizdata,quiztime
+from .forms import basicquizdetails,CustomUserCreationForm,OptionFormSet,options,QuestionForm,userquizform
 # Create your views here.
 from django.contrib.auth import authenticate, login,logout
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.timezone import now
 from django.contrib.auth.decorators import login_required
+from django.forms import modelformset_factory
+from datetime import datetime
+import pytz
 
 @login_required
 def createquiz(request):
@@ -14,7 +17,7 @@ def createquiz(request):
         if request.user.is_staff:
             pass
         else:
-            print("Not Authorized")
+            return render(request ,'staffdashboard.html')
     else:
         return redirect('custom_login')
     if request.method == "POST":
@@ -82,6 +85,10 @@ def show_quiz(request):
                                                  "timestamp": now().timestamp() , "user":request.user})
 @login_required
 def questioncreate(request , quizobject):
+    if request.user.is_staff:
+            pass
+    else:
+        return render(request,'staffdashboard.html')
     if request.method=="POST":
         form= QuestionForm(request.POST)
         formset=OptionFormSet(request.POST)
@@ -110,8 +117,13 @@ def questioncreate(request , quizobject):
         form = QuestionForm()
         formset=OptionFormSet(queryset=options.objects.none())
     return render(request , 'quiz_form.html' , {"queform": form , "formset":formset})
+
 @login_required
 def quizdetails(request, quizobject):
+    if request.user.is_staff:
+            pass
+    else:
+            return render(request ,'staffdashboard.html')
     currentquiz = get_object_or_404(Quiz, id=quizobject)
     matchingquestions = questions.objects.filter(quiz=currentquiz).prefetch_related('options_set').all()
     # Ensure "option_set" matches the related_name of the ForeignKey in your Option model
@@ -119,3 +131,47 @@ def quizdetails(request, quizobject):
         "currentquiz": currentquiz,
         "questions": matchingquestions,
     })
+
+@login_required
+def takequiz(request , quizobject):
+    currentquiz = get_object_or_404(Quiz, id=quizobject)
+    matchingquestions = questions.objects.filter(quiz=currentquiz).prefetch_related('options_set').all()
+    usersquizes=quiztime.objects.filter(user=request.user).filter(quiz=currentquiz)
+    if len(usersquizes)==0:
+        data = quiztime(user=request.user, quiz=currentquiz ,time=datetime.now())
+        timeelapsed=0
+        data.save()
+    else:
+        data=quiztime.objects.get(user=request.user , quiz=currentquiz)
+        timezone = pytz.timezone('UTC')
+        
+        datatime=data.time
+        timeelapsed=timezone.localize(datetime.now())-datatime
+        # print(timeelapsed.total_seconds())#gives tot seconds
+        if ((timeelapsed.total_seconds()/60) > currentquiz.maxtime):  
+            print('time over nub')
+            # return render(request,'home.html')
+    userquizformset = modelformset_factory(
+        userquizdata,
+        form=userquizform,
+        extra=len(matchingquestions)
+    )
+    if request.method=="POST":
+        formset = userquizformset(request.POST)
+        if formset.is_valid():
+            # print(formset)
+            for form in formset:
+                print('\n', form.instance.choice)
+                form.instance.user=request.user
+            formset.save()
+        else:
+            print(formset.errors)
+        pass
+    else:
+        formset=userquizformset(queryset=userquizdata.objects.none() )
+    
+    
+    return render(request,'takequiz.html',{"quiz":currentquiz , "questions" : matchingquestions,
+                                           "formset" : formset ,
+                                           })
+    

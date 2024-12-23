@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form method="post" id="quiz">
+        {% csrf_token %}
+    {% block content %}
+    {% for question in questions %}
+    <p>{{question.question}}</p>
+    <ul>
+        <div id="question-{{forloop.counter0}}" class="display">
+        {% for options in question.options_set.all %}
+        <div >
+        <input type="radio"  name="question-{{question.id}}" id="{{options.id}}">
+
+        {{options.option}}</div>
+        <br>
+        {% endfor %}</ul></div>
+    {% endfor %}
+    <div style="display: flex;">
+        <div style="margin-left: auto;">
+        Timer:<time id="timer">{{quiz.maxtime}}</time>min</div>
+    </div>
+
+<!-- {{formset}} -->
+<div style="display: none;" >
+{{ formset.management_form }}
+        {% for form in formset %}
+                <div class="option">
+                    
+                    <div id="form-question-{{forloop.counter0}}" >{{form.choice}}</div>
+                
+                </div>
+                
+        {% endfor %}</div></div>
+{% endblock %}
+<button type="submit">Submit</button>
+</form>
+<script>
+    const start = new Date();
+    const time = document.getElementById('timer');
+    const timeout = Number(time.textContent)*60*1000
+// Simulate a delay
+setInterval(() => {
+    const end = new Date();
+    const elapsed = end - start; // Difference in milliseconds
+    const curtimer= timeout-(end-start);
+    if (curtimer<0){
+        const form = document.getElementById('#quiz');
+        form.submit();
+        console.log('over')}
+    // console.log(`Elapsed time: ${Math.floor(curtimer/(1000*60))} : ${Math.floor((curtimer % (1000 * 60)) / 1000)}`);
+    time.textContent=`${Math.floor(curtimer/(1000*60))} : ${Math.floor((curtimer % (1000 * 60)) / 1000)}`;
+}, 500);
+document.addEventListener('click' , ()=>{
+    const mcq= document.querySelectorAll('[id^="question-"]');
+    const choice = document.querySelectorAll('[id^="form-question-"]');
+
+    i=0;
+    for(let i = 0 ; i<mcq.length ; i++){
+        // console.log(choice[i])
+        // console.log(mcq[i]);
+        // console.log(choice[i]);
+        const radios=mcq[i].getElementsByTagName('input');
+        // console.log(radios);
+        for(let item of radios){
+            if (item.checked){
+                console.log(item)
+                const select=choice[i].getElementsByTagName('select')[0];
+                console.log(select)
+                console.log(item.id.length);
+                console.log(select.value==item.id);
+                select.value=item.id;
+                console.log(select.value);
+            }
+        }
+        ;
+    }
+
+})
+</script>
+</body>
+</html>
