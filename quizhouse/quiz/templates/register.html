@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% extends 'base.html' %}
     {% load static %}
-
+    {% block content %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
@@ -18,5 +19,6 @@
         <button type="submit">Create</button></div>
     </form>
     <p>Already Have a account ? <a href="{% url 'custom_login' %}">Click Here</a>    </p></div>
+    {% endblock %}
 </body>
 </html>

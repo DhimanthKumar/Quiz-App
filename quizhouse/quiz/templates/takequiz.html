@@ -56,7 +56,7 @@ setInterval(() => {
     // console.log(`Elapsed time: ${Math.floor(curtimer/(1000*60))} : ${Math.floor((curtimer % (1000 * 60)) / 1000)}`);
     time.textContent=`${Math.floor(curtimer/(1000*60))} : ${Math.floor((curtimer % (1000 * 60)) / 1000)}`;
 }, 500);
-document.addEventListener('click' , ()=>{
+document.body.addEventListener('change' , ()=>{
     const mcq= document.querySelectorAll('[id^="question-"]');
     const choice = document.querySelectorAll('[id^="form-question-"]');
 
